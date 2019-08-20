@@ -28,4 +28,23 @@ app.get("/all", function(req, res){
 });
 
 
+app.get("/scrape", function(req, res){
+  axios.get("https://www.rollingstone.com/music/").then(function(response){
+    var $ = cheerio.load(response.data);
 
+    $(".c-card").each(function(i, element){
+      var title = $(element).children("a").text();
+      var link = $(element).children("a").attr("href");
+
+      db.scrapedData.insert({
+        title: title,
+        link: link
+      }, function(err, data){
+        if(err) throw new err;
+      });
+    });
+  });
+});
+app.listen(3000, function() {
+  console.log("App running on port 3000!");
+});
