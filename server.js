@@ -17,18 +17,16 @@ var PORT = 3000;
 // Parse request body as JSON
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
-// Make public a static folder
-
-// Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/unit18Populater", { useNewUrlParser: true });
+app.use(express.static("public"));
+app.use(routes);
 
 app.use(express.static("public"));
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 // Import routes and give the server access to them.
 
-app.use(routes);
-
+// Connect to the Mongo DB
+mongoose.connect("mongodb://localhost/nprscraper", { useNewUrlParser: true });
 
 // Start the server
 app.listen(PORT, function () {

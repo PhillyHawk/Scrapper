@@ -1,11 +1,11 @@
 // Grab the articles as a json
-$.getJSON("/articles", function(data) {
-  // For each one
-  for (var i = 0; i < data.length; i++) {
-    // Display the apropos information on the page
-    $("#articles").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
-  }
-});
+// $.getJSON("/articles", function(data) {
+//   // For each one
+//   for (var i = 0; i < data.length; i++) {
+//     // Display the apropos information on the page
+//     $(".card").append("<p data-id='" + data[i]._id + "'>" + data[i].title + "<br />" + data[i].link + "</p>");
+//   }
+// });
 
 
 // Whenever someone clicks a p tag
@@ -22,15 +22,18 @@ $(document).on("click", "p", function() {
   })
     // With that done, add the note information to the page
     .then(function(data) {
+      var articles = [];
+      articles.push(data);
+      
       console.log(data);
       // The title of the article
-      $("#comments").append("<h2>" + data.title + "</h2>");
+      $("#comment").append("<h2>" + data.title + "</h2>");
       // An input to enter a new title
-      $("#comments").append("<input id='titleinput' name='title' >");
+      $("#comment").append("<input id='titleinput' name='title' >");
       // A textarea to add a new note body
-      $("#comments").append("<textarea id='bodyinput' name='body'></textarea>");
+      $("#comment").append("<textarea id='bodyinput' name='body'></textarea>");
       // A button to submit a new note, with the id of the article saved to it
-      $("#comments").append("<button data-id='" + data._id + "' id='savecomment'>Save Comment </button>");
+      $("#comment").append("<button data-id='" + data._id + "' id='savecomment'>Save Comment </button>");
 
       // If there's a note in the article
       if (data.note) {
@@ -40,6 +43,7 @@ $(document).on("click", "p", function() {
         $("#bodyinput").val(data.comment.body);
       }
     });
+    return articles;
 });
 
 // When you click the savenote button
@@ -70,3 +74,36 @@ $(document).on("click", "#savecomment", function() {
   $("#titleinput").val("");
   $("#bodyinput").val("");
 });
+// /Scrape Button
+$(document).on("click", ".scrape-new", function() {
+console.log("newArticleBtn")
+$(".container-fluid").empty();
+ // Save the id from the article
+ var thisId = $(this).attr("data-id");
+ // Now make an ajax call for the Article
+ $.ajax({
+   method: "GET",
+   url: "/articles/" + thisId
+ })
+  // add comments
+  .then(function(data) {
+    console.log(data);
+
+    // The title of the article
+    $(".container-fluid").append("<h3>" + data.title + "</h3>");
+    // An input to enter a new title
+    $(".container-fluid").append("<input id='titleinput' name='title' >");
+    // A textarea to add a new note body
+    $(".container-fluid").append("<textarea id='bodyinput' name='body'></textarea>");
+    // A button to submit a new note, with the id of the article saved to it
+    $(".container-fluid").append("<button data-id='" + data._id + "' id='savecomment'>Save Comment</button>");
+
+    // If there's a comment in the article
+    if (data.comment) {
+      // Place the title of the comment in the title input
+      $("#titleinput").val(data.comment.title);
+      // Place the body of the note in the body textarea
+      $("#bodyinput").val(data.comment.body);
+    }
+  });
+})
