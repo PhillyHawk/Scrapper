@@ -1,16 +1,11 @@
 //dependancies
 var express = require("express");
-// var logger = require("morgan")
 var mongoose = require("mongoose");
-
-// var axios = require("axios");
-// var cheerio = require("cheerio");
 var exphbs = require("express-handlebars");
-// var db = require("./models");
 var app = express();
 
 var routes = require('./controller/routes');
-var PORT = 3000;
+var PORT = process.env.PORT || 3000;
 
 // Initialize Express
 // Configure middleware
@@ -20,13 +15,13 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(routes);
 
-app.use(express.static("public"));
 app.engine("handlebars", exphbs({ defaultLayout: "main" }));
 app.set("view engine", "handlebars");
 // Import routes and give the server access to them.
 
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/scrapper"
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/nprscraper", { useNewUrlParser: true });
+mongoose.connect(MONGODB_URI);
 
 // Start the server
 app.listen(PORT, function () {

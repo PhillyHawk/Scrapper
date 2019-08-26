@@ -1,3 +1,4 @@
+//require mongoose
 var mongoose = require("mongoose");
 
 // Save a reference to the Schema constructor
@@ -13,10 +14,6 @@ var ArticleSchema = new Schema({
   },
   // `link` is required and of type String
   link: {
-    type: String,
-    required: true
-  },
-  image: {
     type: String,
     required: true
   },

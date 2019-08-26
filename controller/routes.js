@@ -1,9 +1,6 @@
-var express = require("express");
-// var router = express();
 var router = require("express").Router();
 var axios =require("axios");
 var cheerio = require("cheerio");
-
 var db = require("../models");
 
 router.get("/scrape", function(req, res) {
@@ -11,25 +8,25 @@ router.get("/scrape", function(req, res) {
 
   axios.get('https://www.npr.org/sections/codeswitch/').then(function(response) {
     var $ = cheerio.load(response.data)
-    var results = [];
+var results = {};
     $('.item-info').each(function(i, element) {
       //console.log($(element))
       results.title = $(element).find("h2").text();
       results.link = $(element).find("a").attr('href');  
-      if(typeof(results.title) !== undefined) {  
-      console.log(results.title);
-      console.log(results.link);
+      console.log("results"); 
+      console.log(results);
       //results.image = $(element).find(".item-image img").attr('src')  
       db.Article.create(results)
        .then(function(dbArticle){
+         console.log("dbArticle");
          console.log(dbArticle)
        }) .catch(function(err){
+         console.log("error");
          console.log(err)
        })
       // console.log(results.title);
       // console.log(results.link);
       // console.log(results.image);
-    }
     })
     res.send("scrape complete")
   });
